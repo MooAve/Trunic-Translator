@@ -12,11 +12,23 @@ frm = ttk.Frame(root, padding=10)
 frm.grid()
 
 def read_translation(text, tts):
+    """
+    Reads the provided text using text-to-speech
+    :param text: the text to read
+    :param tts: a pyttsx engine
+    """
+
     tts.say(text)
     tts.runAndWait()
 
 
 def create_outer_rune(rune):
+    """
+    Draws all the lines to form the outer input rune
+
+    :param rune: a rune object that will hold all the created lines
+    :return:
+    """
     # ^
     rune.create_rune_line(250, 5, 200, 30)
     rune.create_rune_line(250, 5, 300, 30)
@@ -29,6 +41,11 @@ def create_outer_rune(rune):
 
 
 def create_inner_rune(rune):
+    """
+    Draws all the lines that form the inner input rune
+
+    :param rune: a rune object that will hold all the created lines
+    """
     # W
     rune.create_rune_line(200, 30, 250, 55)
     rune.create_rune_line(250, 5, 250, 55)
@@ -42,6 +59,12 @@ def create_inner_rune(rune):
     
     
 def toggle_circle(canvas, circle):
+    """
+    Toggles the rune circle
+
+    :param canvas: the canvas widget that holds the circle
+    :param circle: the oval widget on the provided canvas
+    """
     if canvas.itemcget(circle, "outline") == "black":
         canvas.itemconfigure(circle, outline="gray75")
     else:
@@ -49,6 +72,13 @@ def toggle_circle(canvas, circle):
 
 
 def is_circle_on(canvas, circle):
+    """
+    Returns the current state of the circle rune
+
+    :param canvas: the canvas widget that holds the circle
+    :param circle: the oval widget on the provided canvas
+    :return: Bool
+    """
     if canvas.itemcget(circle, "outline") == "black":
         return True
     else:
@@ -56,6 +86,13 @@ def is_circle_on(canvas, circle):
 
 
 def add_translation(text_widget, canvas, circle):
+    """
+    Takes the current state of the input rune and outputs its translation onto a text widget
+
+    :param text_widget: ID of a label widget
+    :param canvas: a canvas object
+    :param circle: an oval widget
+    """
     cur_text = text_widget.cget("text")
 
     inner_translation = ""
@@ -79,26 +116,36 @@ def add_translation(text_widget, canvas, circle):
 
 
 def add_space(text_widget):
+    """
+    Outputs a space to the provided text widget
+
+    :param text_widget: a label widget
+    """
     text_widget.configure(text = text_widget.cget("text") + " ")
 
 
 def delete_word(text_widget):
+    """
+    Deletes the last word added to a text widget
+
+    :param text_widget: a label widget
+    """
     cur_text = text_widget.cget("text")
 
-    split_text = cur_text.split(" ")
-
-    last_word = split_text[len(split_text) - 1]
-
-    text_widget.configure(text = cur_text[0:cur_text.index(last_word)])
+    text_widget.configure(text = cur_text.rsplit(" ", 1)[0])
 
 
+# TODO: display previously inputted runes
 ttk.Label(text="Runes go Here").grid(column=0, row=0)
 
+# Create widget used to hold translated text
 translation_text = ttk.Label(text="")
 translation_text.grid(column=0, row=1)
 
+# Create read-aloud button
 ttk.Button(root, text="Read", command=lambda: read_translation(translation_text.cget("text"), engine)).grid(column=1, row=1)
 
+# Create the input runes
 canvas = Canvas(root, width=500, height=500)
 canvas.grid(column=0, row=2)
 
@@ -112,9 +159,17 @@ rune_circle = canvas.create_oval(225, 160, 275, 210, width=8, outline = "grey75"
 
 canvas.tag_bind(rune_circle, "<Button-1>", lambda x: toggle_circle(canvas, rune_circle))
 
-ttk.Button(root, text="Submit", command = lambda: add_translation(translation_text, canvas, rune_circle)).grid(column=0, row = 3)
+# Create misc. functional buttons
+submit_button = ttk.Button(root, text="Submit", command = lambda: add_translation(translation_text, canvas, rune_circle))
+submit_button.grid(column=0, row = 3)
+
 ttk.Button(root, text="Space", command = lambda: add_space(translation_text)).grid(column=1, row=3)
 ttk.Button(root, text="Delete", command = lambda: delete_word(translation_text)).grid(column=2, row=3)
 ttk.Button(root, text="Clear", command = lambda: translation_text.configure(text = "")).grid(column=3, row=3)
+
+# Add keybinds for some misc. functions
+root.bind("<Return>", lambda x: add_translation(translation_text, canvas, rune_circle))
+root.bind("<space>", lambda x: add_space(translation_text))
+root.bind("<BackSpace>", lambda x: delete_word(translation_text))
 
 root.mainloop()
