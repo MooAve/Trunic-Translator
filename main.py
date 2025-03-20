@@ -3,7 +3,9 @@ from tkinter import ttk
 
 import json
 import pyttsx3
-from rune import Rune
+
+from input_rune import Rune
+from rune_output import OutputRunes
 
 engine = pyttsx3.init()
 
@@ -114,6 +116,9 @@ def add_translation(text_widget, canvas, circle):
 
     text_widget.configure(text = cur_text)
 
+    if outer_translation != "":
+        runes_out.add_rune(outer_rune = outer_rune.get_rune_string())
+
 
 def add_space(text_widget):
     """
@@ -122,6 +127,7 @@ def add_space(text_widget):
     :param text_widget: a label widget
     """
     text_widget.configure(text = text_widget.cget("text") + " ")
+    runes_out.add_space()
 
 
 def delete_word(text_widget):
@@ -135,8 +141,10 @@ def delete_word(text_widget):
     text_widget.configure(text = cur_text.rsplit(" ", 1)[0])
 
 
-# TODO: display previously inputted runes
-ttk.Label(text="Runes go Here").grid(column=0, row=0)
+output_canvas = Canvas(root, width=500, height=100)
+output_canvas.grid(column=0, row=0)
+
+runes_out = OutputRunes(output_canvas)
 
 # Create widget used to hold translated text
 translation_text = ttk.Label(text="")
