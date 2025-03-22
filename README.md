@@ -10,5 +10,5 @@ TODO:
 - Add more text editing options (forward/back, ~~clear, backspace~~)
 - ~~Add keyboard shortcuts~~
 - ~~Add a read-aloud text to speech button~~
-- Display previously inputted runes?
+- ~~Display previously inputted runes?~~
 - Add support for an IPA translation?

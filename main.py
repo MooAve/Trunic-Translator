@@ -109,15 +109,16 @@ def add_translation(text_widget, canvas, circle):
         data = json.load(f)
         outer_translation = data.get(outer_rune.get_rune_string(), "")
 
-    if is_circle_on(canvas, circle):
+    circle_on = is_circle_on(canvas, circle)
+
+    if circle_on:
         cur_text += outer_translation + inner_translation
     else:
         cur_text += inner_translation + outer_translation
 
     text_widget.configure(text = cur_text)
 
-    if outer_translation != "":
-        runes_out.add_rune(outer_rune = outer_rune.get_rune_string())
+    runes_out.add_rune(outer_rune.get_rune_string(), inner_rune.get_rune_string(), circle_on)
 
 
 def add_space(text_widget):
