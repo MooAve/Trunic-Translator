@@ -107,16 +107,22 @@ def add_translation(text_widget, circle):
 
     circle_on = is_circle_on(circle)
 
+    # Don't add output if inner + outer runes are blank
+    if outer_translation != "" and inner_translation != "":
+        runes_out.add_rune(outer_rune.get_rune_string(), inner_rune.get_rune_string(), circle_on)
+    elif outer_translation == "":
+        runes_out.add_rune("", inner_rune.get_rune_string(), circle_on)
+    elif inner_translation == "":
+        runes_out.add_rune(outer_rune.get_rune_string(), "", circle_on)
+    else:
+        return
+
     if circle_on:
         cur_text += "-" + outer_translation + inner_translation
     else:
         cur_text += "-" + inner_translation + outer_translation
 
     text_widget.configure(text = cur_text)
-
-    # Don't add output if inner + outer runes are blank
-    if outer_translation != "" or inner_translation != "":
-        runes_out.add_rune(outer_rune.get_rune_string(), inner_rune.get_rune_string(), circle_on)
 
 
 def add_space(text_widget):
