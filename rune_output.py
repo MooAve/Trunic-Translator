@@ -57,7 +57,7 @@ class OutputRunes:
 
         # |
         if rune[3] == "1":
-            self.canvas.create_line(self.cur_pos, 11.25, self.cur_pos, 25, width = 2)
+            self.canvas.create_line(self.cur_pos, 17.5, self.cur_pos, 25, width = 2)
 
         # M
         if rune[4] == "1":

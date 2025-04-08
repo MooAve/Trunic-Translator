@@ -110,9 +110,9 @@ def add_translation(text_widget, circle):
     # Don't add output if inner + outer runes are blank
     if outer_translation != "" and inner_translation != "":
         runes_out.add_rune(outer_rune.get_rune_string(), inner_rune.get_rune_string(), circle_on)
-    elif outer_translation == "":
+    elif outer_translation == "" and inner_translation != "":
         runes_out.add_rune("", inner_rune.get_rune_string(), circle_on)
-    elif inner_translation == "":
+    elif inner_translation == "" and outer_translation != "":
         runes_out.add_rune(outer_rune.get_rune_string(), "", circle_on)
     else:
         return
