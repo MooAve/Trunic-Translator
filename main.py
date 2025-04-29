@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import filedialog
 
 import json
 import pyttsx3
@@ -12,6 +13,8 @@ engine = pyttsx3.init()
 root = Tk()
 frm = ttk.Frame(root, padding=10)
 frm.grid()
+
+root.option_add("*tearOff", FALSE)
 
 def read_translation(text, tts):
     """
@@ -146,6 +149,7 @@ def delete_word(text_widget):
     text_widget.configure(text = cur_text.rsplit("-", 1)[0])
     runes_out.delete_rune()
 
+
 def clear_all(text_widget):
     """
     Deletes all text and output runes
@@ -156,6 +160,23 @@ def clear_all(text_widget):
     runes_out.clear_all_runes()
 
 
+def save_text(text_widget):
+    """
+    Saves the translated text to a user-specified file
+    :param text_widget: a label widget containing translated text
+    """
+
+    text = text_widget.cget("text")
+
+    text_file = filedialog.asksaveasfile(mode="w", title="Save Translated Text", defaultextension=".txt")
+
+    if text_file is not None:
+
+        text_file.write(text)
+
+        text_file.close()
+
+
 output_canvas = Canvas(root, width=500, height=100)
 output_canvas.grid(column=0, row=0)
 
@@ -164,6 +185,14 @@ runes_out = OutputRunes(output_canvas)
 # Create widget used to hold translated text
 translation_text = ttk.Label(text="")
 translation_text.grid(column=0, row=1)
+
+# Add menu bar
+menu = Menu(root)
+root["menu"] = menu
+
+file_menu = Menu(menu)
+menu.add_cascade(menu=file_menu, label="File")
+file_menu.add_command(label="Save As", command=lambda: save_text(translation_text))
 
 # Create read-aloud button
 ttk.Button(root, text="Read", command=lambda: read_translation(translation_text.cget("text"), engine)).grid(column=1, row=1)

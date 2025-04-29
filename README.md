@@ -11,4 +11,5 @@ TODO:
 - ~~Add keyboard shortcuts~~
 - ~~Add a read-aloud text to speech button~~
 - ~~Display previously inputted runes?~~
-- Add support for an IPA translation?
+- Add option to save/load runes alongside their translations
+- General UI improvements
