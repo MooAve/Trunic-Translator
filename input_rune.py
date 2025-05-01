@@ -47,3 +47,13 @@ class Rune:
         """
         rune_string = "".join([str(i) for i in self.rune])
         return rune_string
+
+
+    def clear_rune(self):
+        """
+        Resets all rune lines to their default state
+        """
+
+        for line in self.lines:
+            self.canvas.itemconfigure(line, fill="gray75")
+            self.rune[line - self.lines[0]] = 0

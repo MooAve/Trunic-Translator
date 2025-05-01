@@ -150,6 +150,19 @@ def delete_word(text_widget):
     runes_out.delete_rune()
 
 
+def clear_input_rune(inner, outer, circle):
+    """
+    Resets both the inner and outer runes to their default state
+    :param inner: inner rune widget
+    :param outer: outer rune widget
+    :param circle: cirlce rune widget
+    """
+
+    inner_rune.clear_rune()
+    outer_rune.clear_rune()
+    canvas.itemconfigure(circle, outline="gray75")
+
+
 def clear_all(text_widget):
     """
     Deletes all text and output runes
@@ -186,14 +199,6 @@ runes_out = OutputRunes(output_canvas)
 translation_text = ttk.Label(text="")
 translation_text.grid(column=0, row=1)
 
-# Add menu bar
-menu = Menu(root)
-root["menu"] = menu
-
-file_menu = Menu(menu)
-menu.add_cascade(menu=file_menu, label="File")
-file_menu.add_command(label="Save As", command=lambda: save_text(translation_text))
-
 # Create read-aloud button
 ttk.Button(root, text="Read", command=lambda: read_translation(translation_text.cget("text"), engine)).grid(column=1, row=1)
 
@@ -210,6 +215,19 @@ create_outer_rune(outer_rune)
 rune_circle = canvas.create_oval(225, 160, 275, 210, width=8, outline = "grey75")
 
 canvas.tag_bind(rune_circle, "<Button-1>", lambda x: toggle_circle(rune_circle))
+
+# Add menu bar
+menu = Menu(root)
+root["menu"] = menu
+
+file_menu = Menu(menu)
+menu.add_cascade(menu=file_menu, label="File")
+file_menu.add_command(label="Save As", command=lambda: save_text(translation_text))
+
+edit_menu = Menu(menu)
+menu.add_cascade(menu=edit_menu, label="Edit")
+edit_menu.add_command(label="Clear Rune", command = lambda:(clear_input_rune(inner_rune, outer_rune, rune_circle)))
+edit_menu.add_command(label="Delete All Text", command = lambda: clear_all(translation_text))
 
 # Create misc. functional buttons
 submit_button = ttk.Button(root, text="Submit", command = lambda: add_translation(translation_text, rune_circle))
