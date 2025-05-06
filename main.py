@@ -111,12 +111,8 @@ def add_translation(text_widget, circle):
     circle_on = is_circle_on(circle)
 
     # Don't add output if inner + outer runes are blank
-    if outer_translation != "" and inner_translation != "":
+    if outer_translation != "" or inner_translation != "":
         runes_out.add_rune(outer_rune.get_rune_string(), inner_rune.get_rune_string(), circle_on)
-    elif outer_translation == "" and inner_translation != "":
-        runes_out.add_rune("", inner_rune.get_rune_string(), circle_on)
-    elif inner_translation == "" and outer_translation != "":
-        runes_out.add_rune(outer_rune.get_rune_string(), "", circle_on)
     else:
         return
 
@@ -190,6 +186,23 @@ def save_text(text_widget):
         text_file.close()
 
 
+def save_runes(rune_out):
+    """
+    Saves the current output runes to a text file
+    :param rune_out: Output rune object
+    """
+
+    text_file = filedialog.asksaveasfile(mode="w", title="Save Translated Text", defaultextension=".txt")
+
+    if text_file is not None:
+
+        for rune in rune_out.get_output_runes():
+            text_file.write(rune + " ")
+
+        text_file.close()
+
+
+# Create widget used to hold previously input runes
 output_canvas = Canvas(root, width=500, height=100)
 output_canvas.grid(column=0, row=0)
 
@@ -222,7 +235,9 @@ root["menu"] = menu
 
 file_menu = Menu(menu)
 menu.add_cascade(menu=file_menu, label="File")
-file_menu.add_command(label="Save As", command=lambda: save_text(translation_text))
+file_menu.add_command(label="Save Text As", command=lambda: save_text(translation_text))
+file_menu.add_command(label="Save Runes As", command=lambda: save_runes(runes_out))
+# file_menu.add_command(label="Load Runes", command=lambda: runes_out.set_output_runes(["10111", "1011010", "_", "1011010", "10111"]))
 
 edit_menu = Menu(menu)
 menu.add_cascade(menu=edit_menu, label="Edit")

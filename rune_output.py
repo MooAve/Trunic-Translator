@@ -7,6 +7,7 @@ class OutputRunes:
     def __init__(self, canvas):
         self.canvas = canvas
         self.cur_pos = 25
+        self.cur_runes = []
 
 
     def _add_outer_rune(self, rune, left, right):
@@ -80,12 +81,18 @@ class OutputRunes:
         left = self.cur_pos - 6.25
         right = self.cur_pos + 6.25
 
-        if outer_rune != "":
+        if outer_rune != "00000":
             self._add_outer_rune(outer_rune, left, right)
-        if inner_rune != "":
+        if inner_rune != "0000000":
             self._add_inner_rune(inner_rune, left, right)
+
         if circle:
+            self.cur_runes.append(outer_rune)
+            self.cur_runes.append(inner_rune)
             self.canvas.create_oval(left - .5, 42.5, right - .5, 55, width = 2)
+        else:
+            self.cur_runes.append(inner_rune)
+            self.cur_runes.append(outer_rune)
 
         self.cur_pos += 12.5
 
@@ -95,7 +102,9 @@ class OutputRunes:
         Adds a blank space to the output canvas
         """
 
+        self.cur_runes.append("_")
         self.cur_pos += 12.5
+
 
     def delete_rune(self):
         """
@@ -113,10 +122,49 @@ class OutputRunes:
         for line in last_rune:
             self.canvas.delete(line)
 
+        # Remove inner/outer rune pair from list if it was not a space
+        if self.cur_runes.pop() != "":
+            self.cur_runes.pop()
+
+
     def clear_all_runes(self):
         """
         Deletes all previously inputted runes
         """
 
+        self.cur_runes.clear()
+
         self.cur_pos = 25
         self.canvas.delete("all")
+
+
+    def get_output_runes(self):
+        """
+        Returns a list of saved output runes
+        :return:  list of strings representing output runes
+        """
+
+        return self.cur_runes
+
+
+    def set_output_runes(self, new_runes):
+        """
+        Sets the current output runes to the provided list
+        Resets the current list of output runes
+        :param new_runes: A list of strings representing output runes
+        """
+
+        self.clear_all_runes()
+
+        i = 0
+
+        while i < len(new_runes):
+            if new_runes[i] != "_":
+                if len(new_runes[i]) == 5:
+                    self.add_rune(new_runes[i], new_runes[i + 1], True)
+                else:
+                    self.add_rune(new_runes[i + 1], new_runes[i], False)
+                i += 2
+            else:
+                self.add_space()
+                i += 1
