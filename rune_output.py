@@ -160,10 +160,16 @@ class OutputRunes:
 
         while i < len(new_runes):
             if new_runes[i] != "_":
-                if len(new_runes[i]) == 5:
+                # Check rune lengths to determine if a circle should be added
+                # If an invalid rune is found, stop loading runes and clear previously loaded ones
+                if len(new_runes[i]) == 5 and len(new_runes[i + 1]) == 7:
                     self.add_rune(new_runes[i], new_runes[i + 1], True)
-                else:
+                elif len(new_runes[i]) == 7 and len(new_runes[i+1]) == 5:
                     self.add_rune(new_runes[i + 1], new_runes[i], False)
+                else:
+                    print("ERROR: Invalid Rune In File")
+                    self.clear_all_runes()
+                    return
                 i += 2
             else:
                 self.add_space()

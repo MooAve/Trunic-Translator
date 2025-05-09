@@ -202,6 +202,21 @@ def save_runes(rune_out):
         text_file.close()
 
 
+def load_runes(rune_out):
+    """
+    Loads a file containing strings of output runes
+    :param rune_out: Output rune object
+    """
+
+    text_file = filedialog.askopenfile(mode="r", defaultextension=".txt")
+
+    if text_file is not None:
+
+        rune_out.set_output_runes(text_file.read().split())
+
+        text_file.close()
+
+
 # Create widget used to hold previously input runes
 output_canvas = Canvas(root, width=500, height=100)
 output_canvas.grid(column=0, row=0)
@@ -237,7 +252,7 @@ file_menu = Menu(menu)
 menu.add_cascade(menu=file_menu, label="File")
 file_menu.add_command(label="Save Text As", command=lambda: save_text(translation_text))
 file_menu.add_command(label="Save Runes As", command=lambda: save_runes(runes_out))
-# file_menu.add_command(label="Load Runes", command=lambda: runes_out.set_output_runes(["10111", "1011010", "_", "1011010", "10111"]))
+file_menu.add_command(label="Load Runes From File", command=lambda: load_runes(runes_out))
 
 edit_menu = Menu(menu)
 menu.add_cascade(menu=edit_menu, label="Edit")
